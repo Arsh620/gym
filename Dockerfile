@@ -29,7 +29,7 @@ COPY . /var/www
 RUN composer install --no-dev --optimize-autoloader
 
 # Run migrations
-RUN php artisan migrate --force
+# RUN php artisan migrate --force
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www \
@@ -46,4 +46,5 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 EXPOSE 80
 
 # Start supervisor
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
+CMD sh -c "php artisan migrate --force && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"

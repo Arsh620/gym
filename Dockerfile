@@ -48,4 +48,5 @@ EXPOSE 80
 # Start supervisor
 # CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 # CMD sh -c "php artisan migrate --force && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
-CMD sh -c "php artisan migrate --force && php artisan db:seed --force && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+# CMD sh -c "php artisan migrate --force && php artisan db:seed --force && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+CMD sh -c "php artisan migrate --force && php artisan db:seed --force || true && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"

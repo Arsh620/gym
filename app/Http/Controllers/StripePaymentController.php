@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use Illuminate\Support\Facades\Auth;
 
 class StripePaymentController extends Controller
 {
@@ -88,7 +89,8 @@ class StripePaymentController extends Controller
                 ]);
             }
 
-            return view('payment.success');
+            Auth::login($user);
+            return redirect('/welcome')->with('success', 'Payment successful! Welcome to the gym!');
         }
 
         return redirect('/payment/cancel');

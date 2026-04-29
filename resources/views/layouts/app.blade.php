@@ -18,7 +18,17 @@
                 <a href="/">Home</a>
                 <a href="/plans">Membership</a>
                 <a href="#classes">Classes</a>
-                <a href="/register">Join Now</a>
+                @auth
+                    @if(auth()->user()->email === 'admin@fitzone.com')
+                        <a href="/admin/dashboard">Admin</a>
+                    @elseif(auth()->user()->member)
+                        <a href="/member/dashboard">Dashboard</a>
+                    @endif
+                    <a href="/logout">Logout</a>
+                @else
+                    <a href="/login">Login</a>
+                    <a href="/register">Join Now</a>
+                @endauth
             </div>
         </div>
     </nav>

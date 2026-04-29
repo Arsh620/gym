@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MemberDashboardController;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\PlanController;
@@ -14,23 +16,31 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\StripePaymentController;
+use App\Http\Controllers\WelcomeController;
 
-// User Routes
+// Public Routes
 Route::get('/', [HomeController::class, 'index']);
-
 Route::get('/plans', [PlanController::class, 'index']);
-Route::get('/register', [RegisterController::class, 'showForm']);
+Route::get('/register', [RegisterController::class, 'showForm'])->name('register');
 Route::post('/register', [StripePaymentController::class, 'checkout']);
 
+// Authentication Routes
+Route::get('/login', [AuthController::class, 'showLogin']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::get('/logout', [AuthController::class, 'logout']);
+
+// Payment Routes
 Route::get('/payment/success', [StripePaymentController::class, 'success']);
 Route::get('/payment/cancel', [StripePaymentController::class, 'cancel']);
 
-Route::get('/welcome', function () {
-    return view('welcome-member');
+// Member Routes
+Route::middleware('auth')->group(function () {
+    Route::get('/welcome', [WelcomeController::class, 'index']);
+    Route::get('/member/dashboard', [MemberDashboardController::class, 'index']);
 });
 
 // Admin Routes
-Route::prefix('admin')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     
     Route::resource('members', MemberController::class);

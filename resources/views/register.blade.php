@@ -11,14 +11,14 @@
                 <!-- Header -->
                 <div style="background: linear-gradient(135deg, #e74c3c, #c0392b); padding: 2rem; text-align: center;">
                     <h1 style="color: white; font-size: 2.2rem; font-weight: 700; margin: 0 0 0.5rem 0;">Join FitZone</h1>
-                    <p style="color: rgba(255,255,255,0.95); font-size: 1.1rem; margin: 0;">Start your transformation today</p>
+                    <p style="color: rgba(255,255,255,0.95); font-size: 1.1rem; margin: 0;">{{ $plan->name }} Plan - ${{ $plan->price }}/month</p>
                 </div>
 
                 <!-- Form -->
                 <div style="padding: 2rem; flex: 1; display: flex; flex-direction: column;">
                     <form action="/register" method="POST" style="flex: 1; display: flex; flex-direction: column;">
                         @csrf
-                        <input type="hidden" name="plan_id" value="{{ request('plan') }}">
+                        <input type="hidden" name="plan_id" value="{{ $plan->id }}">
                         
                         <!-- Personal Info -->
                         <div style="margin-bottom: 1.5rem;">

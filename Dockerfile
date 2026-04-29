@@ -32,9 +32,14 @@ RUN composer install --no-dev --optimize-autoloader
 # RUN php artisan migrate --force
 
 # Set permissions
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www/storage \
-    && chmod -R 755 /var/www/bootstrap/cache
+# RUN chown -R www-data:www-data /var/www \
+#     && chmod -R 755 /var/www/storage \
+#     && chmod -R 755 /var/www/bootstrap/cache
+
+RUN chmod -R 775 /var/www/storage \
+    && chmod -R 775 /var/www/bootstrap/cache \
+    && chown -R www-data:www-data /var/www/storage \
+    && chown -R www-data:www-data /var/www/bootstrap/cache
 
 # Copy nginx config
 COPY docker/nginx.conf /etc/nginx/sites-available/default
@@ -49,4 +54,4 @@ EXPOSE 80
 # CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 # CMD sh -c "php artisan migrate --force && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
 # CMD sh -c "php artisan migrate --force && php artisan db:seed --force && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
-CMD sh -c "php artisan migrate --force && php artisan db:seed --force || true && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+CMD sh -c "php artisan migrate --force && php artisan db:seed --class=AdminSeeder --force || true && /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf"

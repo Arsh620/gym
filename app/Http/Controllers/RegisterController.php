@@ -5,14 +5,28 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Member;
 use App\Models\Membership;
+use App\Models\Plan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
-    public function showForm()
+    public function showForm(Request $request)
     {
-        return view('register');
+        $planId = $request->get('plan');
+        
+        if (!$planId) {
+            return redirect('/plans')->with('error', 'Please select a plan first');
+        }
+        
+        $plan = Plan::find($planId);
+        
+        if (!$plan) {
+            return redirect('/plans')->with('error', 'Invalid plan selected');
+        }
+        
+        return view('register', compact('plan'));
     }
 
     public function register(Request $request)
@@ -55,6 +69,7 @@ class RegisterController extends Controller
             'end_date' => now()->addDays($plan->duration_days),
         ]);
 
-        return redirect('/dashboard')->with('success', 'Registration successful!');
+        Auth::login($user);
+        return redirect('/welcome')->with('success', 'Registration successful!');
     }
 }
